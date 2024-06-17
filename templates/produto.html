@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrade - Detalhes do Item</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #ddd;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .product-container {
+            width: 90%;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-image {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .product-details .title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-details .description {
+            margin-bottom: 25px;
+            word-wrap: break-word;
+        }
+
+        .product-details .user-info {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .product-details .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .product-details .user-info .username {
+            margin-left: 5px;
+        }
+
+        .rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .rating i {
+            color: #ffc107;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .button-container button {
+            background-color: #5cb85c;
+            width: 100%;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button-container-r button {
+            width: 100%;
+            background-color: #A5A6A5;
+            color: black;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .button-container button:hover {
+            background-color: #4cae4c;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #ddd;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .footer i {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        .footer .active {
+            color: #5cb85c;
+        }
+
+        @media (max-width: 600px) {
+            .product-image img {
+                height: 250px;
+            }
+
+            .product-details {
+                margin-bottom: 10px;
+            }
+
+        }
+        .cidade{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .cidade img{
+            width: 30px;
+            height: 30px;
+        }
+        .usuario{
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+        .like{
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .like i{
+            font-size: 2rem;
+        }
+        .like .active{
+            color:red;
+        }
+        .like .deactive{
+            color:black;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    integrity="sha512-..." crossorigin="anonymous">
+</head>
+<body>
+    <div class="header">
+        <div class="title">Detalhes do item</div>
+    </div>
+    <div class="product-container">
+        <div class="product-image">
+            <img src="{{ url_for('static', filename='imagens/' + produto.imagem_prod) }}" alt="Imagem do Produto">
+        </div>
+        <!--<div class="like">
+            <a href="/update_like/{{ produto.id_produto }}/like" id="like-icon">
+                <i class="fa-solid fa-heart" id="like-icon"></i>
+            </a>
+            <div class="avaliacao">
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+        </div>-->
+        <div class="product-details">
+            <div class="title">{{ produto.titulo }}</div>
+            <div class="description">{{ produto.descricao }}</div>
+            <div class="info_user">
+                <div class="user-info">
+                        <img src="{{ url_for('static', filename='imagens/' + produto.usuario.imagem) }}" alt="Foto do Usuário">
+                        <div class="username">Por {{ produto.usuario.nome }}</div>
+                </div>  
+                <div class="cidade">
+                    <img src="/static/imagens/gps.png" alt="">
+                    <p>{{ produto.usuario.cidade }}</p>
+                </div>
+            </div>
+            
+            <form method="POST" action="/produto">  
+                {% if produto['reservado'] == 0 %}
+                    <div class="button-container">
+                        <button id="active" type="submit">Reservar</button>
+                    </div>
+                {% else %}
+                    <div class="button-container-r">
+                        <button class="disabled" disabled>Reservado</button>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+        
+    </div>
+    <div class="footer">
+        <a href="/home" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="/cadProd"><i class="fas fa-envelope"></i> Cadastrar Produto</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} <!-- mensagem de alerta-->
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" onclick="closeAlert(this)">
+                        <span class="close-button">×</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>
+    <script>
+        function closeAlert(element) {
+            element.style.opacity = 0;
+            setTimeout(() => {
+                element.remove();
+            }, 300);
+        }
+    </script>
+</body>
+</html>

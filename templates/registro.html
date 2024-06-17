@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrade - Registrar</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #eff1f8;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .logo img {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 1px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #687089;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .or {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .google-button {
+            background-color: #dd4b39;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .google-button i {
+            margin-right: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .foto-perfil {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .foto-perfil input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .foto-perfil .camera-icon {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out; 
+    position: fixed; 
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    z-index: 1000;
+  }
+
+  .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+
+  .alert-error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registrar</h1>
+        <div class="logo">
+            <img src="/static/imagens/logo.jpeg" alt="ClassTrade Logo">
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" id="email" name="email" >
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha*</label>
+                <input type="password" id="senha" name="senha" required>
+            </div>
+            <div class="form-group">
+                <label for="ra">RA*</label>
+                <input type="text" id="ra" name="ra" required>
+            </div>
+            <div class="form-group">
+                <label for="nome">Nome*</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="endereco">Cidade*</label>
+                <input type="text" id="endereco" name="endereco" required>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone*</label>
+                <input type="text" id="telefone" name="telefone" maxlength="15" required>
+            </div>
+            <div class="form-group">
+                <label for="imagem">Inserir foto de perfil</label>
+                <input type="file" id="imagem" name="imagem" accept="image/*">  
+            </div>
+            <button type="submit">Concluir</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" onclick="closeAlert(this)">
+                        <span class="close-button">×</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="footer">
+            By proceeding you also agree to the Terms of Service and Privacy Policy
+        </div>
+        <div class="footer">
+            Already have an account? Sign in
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous">
+
+
+    </script>
+    <script>
+        function closeAlert(element) {
+            element.style.opacity = 0;
+            setTimeout(() => {
+              element.remove();
+            }, 300); 
+        }
+    </script>
+    <script>
+        // Função para aplicar a máscara de telefone
+        function mascaraTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, ''); // Remove caracteres não numéricos
+            telefone = telefone.replace(/^(\d{2})(\d)/g, '($1) $2'); // Adiciona parênteses para DDD
+            telefone = telefone.replace(/(\d{5})(\d)/, '$1-$2'); // Adiciona hífen após os 5 primeiros dígitos
+            return telefone;
+        }
+
+        // Objeto do input "telefone"
+        const telefoneInput = document.getElementById('telefone');
+
+        // Adiciona evento "input" ao campo de telefone
+        telefoneInput.addEventListener('input', function() {
+            this.value = mascaraTelefone(this.value);
+            if (this.value.replace(/\D/g, '').length > 12) {
+            // Limita o número de dígitos a 11
+            this.value = this.value.substring(0, this.value.length - 1);
+        }
+        });
+    </script>
+</body>
+</html>

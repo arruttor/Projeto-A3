@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrade - Feed</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #ddd;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .search-bar {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            width: 100%;
+            border: none;
+            padding: 0;
+            margin-left: 10px;
+        }
+
+        .search-bar i {
+            font-size: 18px;
+            color: #ccc;
+        }
+
+        .feed-container {
+            width: 90%;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-gap: 20px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .card .user-info {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .card .user-info img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .card .user-info .username {
+            margin-left: 15%;
+        }
+
+        .card .title {
+            font-weight: bold;
+            margin-top: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowarp;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #ddd;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .footer i {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        .footer .active {
+            color: #5cb85c;
+        }
+
+        .notification-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .notification-icon img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile-image {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    integrity="sha512-..." crossorigin="anonymous">
+</head>
+<body>
+    <div class="header">
+        <div class="title">Feed</div>
+        <div class="notification-icon">
+            <i class="fas fa-bell"></i>
+            <img src="{{ url_for('static', filename='imagens/' + user_image) }}" alt="Foto do Usuário" onclick="redirectToExcluir()">
+        </div>
+    </div>
+    <div class="search-bar">
+        <a href="#"  id="clicksearch" onclick="chama()"><i class="fas fa-search"></i> </a>
+        <input type="text" placeholder="Search"  id="search-input">
+    </div>
+    <div class="feed-container">
+        {% for produto in produtos %}
+            <div class="card" data-produto="{{ produto.id_produto }}">
+                <img src="{{ url_for('static', filename='imagens/' + produto.imagem_prod) }}" alt="Imagem do Produto">
+                <div class="title">{{ produto.titulo }}</div>
+                <div class="user-info">
+                    <img src="{{ url_for('static', filename='imagens/' + produto.usuario.imagem) }}" alt="Foto do Usuário">
+                    <span class="username">{{ produto.usuario.nome }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="footer">
+        <a href="/home" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="/cadProd"><i class="fas fa-envelope"></i> Cadastrar Produto</a>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" onclick="closeAlert(this)">
+                        <span class="close-button">×</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const cards = document.getElementsByClassName("card");
+            for (let card of cards) {
+                card.addEventListener("click", function() {
+                    const produtoId = this.getAttribute("data-produto");
+                    const url = '/produto/' + produtoId; // Crie a URL
+                    console.log(url); // Exiba a URL no console
+                    window.location.href = url;
+                });
+            }
+        });
+    </script>
+    <script>
+        function redirectToExcluir() {
+            window.location.href = '/excluir'; 
+        }
+        const searchInput = document.getElementById("search-input");
+        const feedContainer = document.getElementById("feed-container");
+
+         function chama() {
+            const searchTerm = searchInput.value.toLowerCase();
+            // Faz a requisição para a rota de busca
+            if (searchTerm != ""){
+                window.location.href = `/search_products?searchTerm=${searchTerm}`;
+            }
+        };
+
+        function closeAlert(element) {
+            element.style.opacity = 0;
+            setTimeout(() => {
+                element.remove();
+            }, 300);
+        }
+
+    </script>
+</body>
+</html>

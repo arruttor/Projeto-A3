@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .user-info h2 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat .number {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat .label {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .produto{
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .produto img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .produto .description {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+
+        .produto .actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .produto .fa-whatsapp{
+            margin-left: 10px;
+            font-size: 1.8rem;
+            color: #2ff52b;
+        }
+        .filter-buttons{
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .filter-buttons h2{
+            display: inline;
+        }
+        .filter-buttons .active{
+            color: rgb(60, 150, 214);
+        }
+        .footer {
+            width: 100%;
+            background-color: #ddd;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .footer i {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        .footer .active {
+            color: #5cb85c;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        @media (max-width: 600px) {
+            
+            .stat {
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Responsividade para a lista de itens */
+        @media (max-width: 450px) {
+            .produto img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+     integrity="sha512-..." crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="user-info">
+            <img src="{{ url_for('static', filename='imagens/' + user_image) }}" alt="Foto do Usuário"> 
+            <h2>{{ username }}</h2>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="number">{{ total_reservas }}</div>
+                <div class="label">Reservados</div>
+            </div>
+            <div class="stat">
+                <div class="number">{{ total_produtos }}</div>
+                <div class="label">Produtos Cadastrados</div>
+            </div>
+            <div class="stat">
+                <div class="number">25</div>
+                <div class="label">Avaliações</div>
+            </div>
+        </div>
+
+        <div class="filter-buttons">
+            <h2 class="filter-button" id="postados-button">Postados</h2>
+            <h2 class="filter-button active" id="reservados-button">Reservados</h2>
+        </div>
+
+        <div class="items" id="produtos-container">
+            <!-- Conteúdo dos produtos será exibido aqui -->
+        </div>
+    </div>
+    <div class="footer">
+        <a href="/home" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="/cadProd"><i class="fas fa-envelope"></i> Cadastrar Produto</a>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %} <!--Mensagem de alerta-->
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" onclick="closeAlert(this)">
+                        <span class="close-button">×</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>
+    <script>
+        function closeAlert(element) {
+            element.style.opacity = 0;
+            setTimeout(() => {
+                element.remove();
+            }, 300);
+        }
+
+        const reservadosButton = document.getElementById('reservados-button');
+        const postadosButton = document.getElementById('postados-button');
+        const produtosContainer = document.getElementById('produtos-container');
+
+        function showReservados() {
+            reservadosButton.classList.add('active');
+            postadosButton.classList.remove('active');
+            // Aqui você deve fazer uma requisição AJAX para buscar os produtos reservados
+            // e atualizar o conteúdo do produtosContainer
+            // Exemplo simplificado:
+            produtosContainer.innerHTML = `
+                <div class="items">
+                    {% if reserva_produtos %}
+                        {% for produto in reserva_produtos %}
+                            <div class="produto">
+                                <img src="{{ url_for('static', filename='imagens/' + produto.imagem_prod) }}" alt="Imagem do Produto">
+                                <div class="description">
+                                    <p>{{ produto.titulo }}</p>
+                                    <a href="https://wa.me/+55{{ user_telefone }}"><i id="whats" class="fa-brands fa-whatsapp"></i></a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Você ainda não adicionou nenhum produto.</p>
+                    {% endif %}
+                </div>
+            `;
+        }
+
+        function showPostados() {
+            reservadosButton.classList.remove('active');
+            postadosButton.classList.add('active');
+            // Aqui você deve fazer uma requisição AJAX para buscar os produtos postados
+            // e atualizar o conteúdo do produtosContainer
+            // Exemplo simplificado:
+            produtosContainer.innerHTML = `
+            <div class="items">
+                {% if produtos %}
+                    {% for produto in produtos %}
+                        <div class="produto">
+                            <img src="{{ url_for('static', filename='imagens/' + produto.imagem_prod) }}" alt="Imagem do Produto">
+                            <div class="description">
+                                <p>{{ produto.titulo }}</p>
+                                <a href="/excluir_produto/{{ produto.id_produto }}"><i class="fas fa-times" style="color: red;"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Você ainda não adicionou nenhum produto.</p>
+                {% endif %}
+            </div>
+            `;
+        }
+
+        reservadosButton.addEventListener('click', showReservados);
+        postadosButton.addEventListener('click', showPostados);
+
+        // Inicialmente, mostra os produtos reservados
+        showReservados();
+    </script>
+
+</body>
+</html>
