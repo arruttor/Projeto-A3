@@ -17,15 +17,17 @@ Projeto da A3 onde foi desenvolvido um aplicativo para fazer troca de itens usad
 ```
 https://github.com/arruttor/Projeto-A3
 ```
+2. Crirar os sudiretorios "usuarios" e "produtos" dentro do diretório: \static\imagens.
 
-2. Instalar bibliotecas.
+
+3. Instalar bibliotecas.
 
 ```
-pip install Flask
-pip install flask_sqlalchemy
+pip install Flask flask_sqlalchemy mysqlclient
+
 ```
 
-3. Criar um banco de dados com as seguintes  comandos.
+4. Criar um banco de dados com as seguintes  comandos.
 ```
 CREATE SCHEMA projetoa3;
 
@@ -61,7 +63,7 @@ CREATE TABLE projetoa3.produtos (
    
 ```
 
-4. Mudar o arquivo config.py conectando ao banco dados
+5. Mudar o arquivo config.py conectando ao banco dados
 
 ```
   SQLALCHEMY_DATABASE_URI = 'mysql://usuário do banco:senha@link:porta/nome do banco'
