@@ -1,6 +1,12 @@
 # ClassTrade
 
-Projeto da A3 onde foi desenvolvido um aplicativo para fazer troca de itens usados dentro da comunidade universitária
+Projeto da A3 onde foi desenvolvido um aplicativo para fazer troca de itens usados dentro da comunidade universitária.
+
+## 📌 Atualização
+
+Iniciando a fase **A3 de Gestão e Qualidade de Software**.
+
+Os integrantes do grupo foram adicionados como colaboradores no repositório, dando início ao processo de **revisão e aprimoramento do projeto**, com foco em **boas práticas de engenharia de software**, **documentação**, **testes** e **qualidade do código**.
 
 ## Tecnologias usadas
 
@@ -17,17 +23,17 @@ Projeto da A3 onde foi desenvolvido um aplicativo para fazer troca de itens usad
 ```
 https://github.com/arruttor/Projeto-A3
 ```
-2. Crirar os sudiretorios "usuarios" e "produtos" dentro do diretório: \static\imagens.
 
+2. Criar os subdiretórios `usuarios` e `produtos` dentro do diretório: `\static\imagens`.
 
 3. Instalar bibliotecas.
 
 ```
 pip install Flask flask_sqlalchemy mysqlclient
-
 ```
 
-4. Criar um banco de dados com as seguintes  comandos.
+4. Criar um banco de dados com os seguintes comandos:
+
 ```
 CREATE SCHEMA projetoa3;
 
@@ -42,7 +48,6 @@ CREATE TABLE projetoa3.usuarios (
   PRIMARY KEY (id),
   UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,
   UNIQUE INDEX login_UNIQUE (login ASC) VISIBLE);
-
 
 CREATE TABLE projetoa3.produtos (
   id_produto INT NOT NULL AUTO_INCREMENT,
@@ -60,16 +65,15 @@ CREATE TABLE projetoa3.produtos (
     REFERENCES projetoa3.usuarios (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-   
 ```
 
-5. Mudar o arquivo config.py conectando ao banco dados
+5. Editar o arquivo `config.py` para conectar ao banco de dados:
 
 ```
-  SQLALCHEMY_DATABASE_URI = 'mysql://usuário do banco:senha@link:porta/nome do banco'
+SQLALCHEMY_DATABASE_URI = 'mysql://usuario:senha@host:porta/nome_do_banco'
 ```
 
-5. Rodar a aplicação pelo arquivo app.py
+6. Rodar a aplicação pelo arquivo `app.py`:
 
 ```
 python app.py
