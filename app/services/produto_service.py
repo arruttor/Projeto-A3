@@ -1,6 +1,6 @@
 import os
 from werkzeug.utils import secure_filename
-from app.models.produto import Produto
+from models.produtos import Produto
 from app import db
 
 
