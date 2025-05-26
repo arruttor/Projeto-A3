@@ -20,7 +20,7 @@ def login():
             session['user_cidade'] = user.cidade
             session['user_nome'] = user.nome
 
-            return redirect(url_for('home'))
+            return redirect(url_for('home.home'))
 
         flash('Usuário ou senha inválidos', 'error')
         return render_template('login.html')

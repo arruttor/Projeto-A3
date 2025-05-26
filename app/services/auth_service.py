@@ -30,7 +30,8 @@ class AuthService:
 
         if arquivo_imagem and AuthService.allowed_file(arquivo_imagem.filename):
             filename = secure_filename(arquivo_imagem.filename)
-            caminho = os.path.join('static/imagens/usuarios', filename)
+            caminho = os.path.join('app/static/imagens/usuarios', filename)
+            os.makedirs(os.path.dirname(caminho), exist_ok=True)
             arquivo_imagem.save(caminho)
 
             novo_usuario = User(

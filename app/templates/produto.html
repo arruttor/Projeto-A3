@@ -241,20 +241,7 @@
         <div class="product-image">
             <img src="{{ url_for('static', filename='imagens/' + produto.imagem_prod) }}" alt="Imagem do Produto">
         </div>
-        <!--<div class="like">
-            <a href="/update_like/{{ produto.id_produto }}/like" id="like-icon">
-                <i class="fa-solid fa-heart" id="like-icon"></i>
-            </a>
-            <div class="avaliacao">
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-            </div>
-        </div>-->
+
         <div class="product-details">
             <div class="title">{{ produto.titulo }}</div>
             <div class="description">{{ produto.descricao }}</div>
@@ -269,7 +256,7 @@
                 </div>
             </div>
             
-            <form method="POST" action="/produto">  
+            <form method="POST" action="{{ url_for('produto.reservar_produto', produto_id=produto.id_produto) }}">  
                 {% if produto['reservado'] == 0 %}
                     <div class="button-container">
                         <button id="active" type="submit">Reservar</button>

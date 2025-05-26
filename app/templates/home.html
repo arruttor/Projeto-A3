@@ -198,7 +198,7 @@
         </div>
     </div>
     <div class="search-bar">
-        <a href="#"  id="clicksearch" onclick="chama()"><i class="fas fa-search"></i> </a>
+        <a href="#"  id="clicksearch" onclick="Pesquisar()"><i class="fas fa-search"></i> </a>
         <input type="text" placeholder="Search"  id="search-input">
     </div>
     <div class="feed-container">
@@ -215,7 +215,7 @@
     </div>
     <div class="footer">
         <a href="/home" class="active"><i class="fas fa-home"></i> Home</a>
-        <a href="/cadProd"><i class="fas fa-envelope"></i> Cadastrar Produto</a>
+        <a href="/produto/novo"><i class="fas fa-envelope"></i> Cadastrar Produto</a>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -249,11 +249,14 @@
         const searchInput = document.getElementById("search-input");
         const feedContainer = document.getElementById("feed-container");
 
-         function chama() {
+         function Pesquisar() {
             const searchTerm = searchInput.value.toLowerCase();
             // Faz a requisição para a rota de busca
             if (searchTerm != ""){
-                window.location.href = `/search_products?searchTerm=${searchTerm}`;
+                window.location.href = `/home/search_products?searchTerm=${searchTerm}`;
+            }
+            else{
+                window.location.href = '/home'
             }
         };
 

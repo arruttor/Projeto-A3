@@ -1,51 +1,97 @@
 import os
 from werkzeug.utils import secure_filename
-from models.produtos import Produto
+from flask import session, current_app
+from app.models.produtos import Produto
 from app import db
 
 
 class ProdutoService:
 
     @staticmethod
-    def listar_produtos():
-        return Produto.query.all()
+    def listar_produtos_by_filter(*filter):
+        return Produto.query.filter(*filter).all
 
     @staticmethod
     def buscar_produto_por_id(produto_id):
         return Produto.query.get(produto_id)
 
     @staticmethod
-    def criar_produto(dados_formulario, arquivo_imagem):
-        nome = dados_formulario.get('nome')
+    def cadastrar_produto(dados_formulario, arquivo_imagem):
+        titulo = dados_formulario.get('titulo')
         descricao = dados_formulario.get('descricao')
-        preco = dados_formulario.get('preco')
+        id_usuario = session.get('user_id')
 
-        if not nome or not preco:
-            return None, "Nome e preço são obrigatórios."
+        if not titulo or not descricao:
+            return None, "Preencha todos os campos obrigatórios."
+
+        if arquivo_imagem.filename == '':
+            return None, "Nenhuma imagem selecionada."
 
         if arquivo_imagem and ProdutoService.allowed_file(arquivo_imagem.filename):
             filename = secure_filename(arquivo_imagem.filename)
-            caminho = os.path.join('static/imagens/produtos', filename)
-            arquivo_imagem.save(caminho)
-            imagem_url = f'/produtos/{filename}'
-        else:
-            imagem_url = None  # Pode ser opcional
+            caminho_pasta = os.path.join(current_app.root_path, 'static/imagens/produtos')
 
-        novo_produto = Produto(
-            nome=nome,
-            descricao=descricao,
-            preco=preco,
-            imagem=imagem_url
-        )
+            os.makedirs(caminho_pasta, exist_ok=True)  # Garante que a pasta exista
+
+            caminho_arquivo = os.path.join(caminho_pasta, filename)
+            arquivo_imagem.save(caminho_arquivo)
+
+            novo_produto = Produto(
+                titulo=titulo,
+                descricao=descricao,
+                usuario_id=id_usuario,
+                imagem_prod=f'/produtos/{filename}',
+                reservado=0,
+                reserv_user=0,
+                likes=0
+            )
+
+            try:
+                db.session.add(novo_produto)
+                db.session.commit()
+                return novo_produto, None
+            except Exception as e:
+                db.session.rollback()
+                return None, "Erro ao cadastrar o produto no banco de dados."
+        else:
+            return None, "Tipo de arquivo não permitido."
+        
+        
+        
+    @staticmethod
+    def reservar_produto(produto_id, user_id):
+        produto = Produto.query.get(produto_id)
+
+        if not produto:
+            return None, "Produto não encontrado."
+
+        if produto.reservado == 1:
+            return None, "Este produto já está reservado."
 
         try:
-            db.session.add(novo_produto)
+            produto.reservado = 1
+            produto.reserv_user = user_id
             db.session.commit()
-            return novo_produto, None
+            return produto, None
         except Exception as e:
             db.session.rollback()
-            print(f"Erro ao criar produto: {e}")
-            return None, "Erro ao salvar o produto no banco de dados."
+            return None, "Erro ao reservar o produto. Tente novamente."
+
+
+
+    @staticmethod
+    def buscar_produtos_por_titulo(search_term, user_id):
+        """
+        Busca produtos pelo título que não pertencem ao usuário logado.
+        """
+        if search_term:
+            produtos = Produto.query.filter(
+                Produto.usuario_id != user_id,
+                Produto.titulo.ilike(f'%{search_term}%')
+            ).all()
+            return produtos
+        return []
+
 
     @staticmethod
     def atualizar_produto(produto_id, dados_formulario, arquivo_imagem):
@@ -60,7 +106,7 @@ class ProdutoService:
 
         if arquivo_imagem and ProdutoService.allowed_file(arquivo_imagem.filename):
             filename = secure_filename(arquivo_imagem.filename)
-            caminho = os.path.join('static/imagens/produtos', filename)
+            caminho = os.path.join('app/static/imagens/produtos', filename)
             arquivo_imagem.save(caminho)
             produto.imagem = f'/produtos/{filename}'
 
