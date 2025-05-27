@@ -89,5 +89,5 @@ def deletar_produto(produto_id):
     else:
         flash(error, 'error')
 
-    return redirect(url_for('home.home'))
+    return redirect(url_for('home.excluir'))
 
