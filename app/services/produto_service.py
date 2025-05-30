@@ -13,7 +13,19 @@ class ProdutoService:
 
     @staticmethod
     def buscar_produto_por_id(produto_id):
-        return Produto.query.get(produto_id)
+        return Produto.query.filter_by(id_produto=produto_id).first()
+    
+
+    @staticmethod
+    def buscar_produtos_por_titulo(search_term, user_id):
+        if search_term:
+            produtos = Produto.query.filter(
+                Produto.usuario_id != user_id,
+                Produto.titulo.ilike(f'%{search_term}%')
+            ).all()
+            return produtos
+        return []
+    
 
     @staticmethod
     def cadastrar_produto(dados_formulario, arquivo_imagem):
@@ -77,46 +89,6 @@ class ProdutoService:
             db.session.rollback()
             return None, "Erro ao reservar o produto. Tente novamente."
 
-
-
-    @staticmethod
-    def buscar_produtos_por_titulo(search_term, user_id):
-        """
-        Busca produtos pelo título que não pertencem ao usuário logado.
-        """
-        if search_term:
-            produtos = Produto.query.filter(
-                Produto.usuario_id != user_id,
-                Produto.titulo.ilike(f'%{search_term}%')
-            ).all()
-            return produtos
-        return []
-
-
-    @staticmethod
-    def atualizar_produto(produto_id, dados_formulario, arquivo_imagem):
-        produto = Produto.query.get(produto_id)
-
-        if not produto:
-            return None, "Produto não encontrado."
-
-        produto.nome = dados_formulario.get('nome')
-        produto.descricao = dados_formulario.get('descricao')
-        produto.preco = dados_formulario.get('preco')
-
-        if arquivo_imagem and ProdutoService.allowed_file(arquivo_imagem.filename):
-            filename = secure_filename(arquivo_imagem.filename)
-            caminho = os.path.join('app/static/imagens/produtos', filename)
-            arquivo_imagem.save(caminho)
-            produto.imagem = f'/produtos/{filename}'
-
-        try:
-            db.session.commit()
-            return produto, None
-        except Exception as e:
-            db.session.rollback()
-            print(f"Erro ao atualizar produto: {e}")
-            return None, "Erro ao atualizar o produto."
 
     @staticmethod
     def deletar_produto(produto_id):
