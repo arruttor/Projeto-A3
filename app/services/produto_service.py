@@ -2,6 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import session, current_app
 from app.models.produtos import Produto
+from auth_service import AuthService
 from app import db
 
 
@@ -39,7 +40,7 @@ class ProdutoService:
         if arquivo_imagem.filename == '':
             return None, "Nenhuma imagem selecionada."
 
-        if arquivo_imagem and ProdutoService.allowed_file(arquivo_imagem.filename):
+        if arquivo_imagem and AuthService.allowed_file(arquivo_imagem.filename):
             filename = secure_filename(arquivo_imagem.filename)
             caminho_pasta = os.path.join(current_app.root_path, 'static/imagens/produtos')
 
