@@ -2,7 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import session, current_app
 from app.models.produtos import Produto
-from auth_service import AuthService
+from app.services.auth_service import AuthService
 from app import db
 
 
