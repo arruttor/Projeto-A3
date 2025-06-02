@@ -24,15 +24,13 @@ Os integrantes do grupo foram adicionados como colaboradores no repositório, da
 https://github.com/arruttor/Projeto-A3
 ```
 
-2. Criar os subdiretórios `usuarios` e `produtos` dentro do diretório: `\static\imagens`.
-
-3. Instalar bibliotecas.
+2. Instalar bibliotecas.
 
 ```
-pip install Flask flask_sqlalchemy mysqlclient
+pip install -r requirements.txt
 ```
 
-4. Criar um banco de dados com os seguintes comandos:
+3. Criar um banco de dados com os seguintes comandos:
 
 ```
 CREATE SCHEMA projetoa3;
@@ -67,14 +65,14 @@ CREATE TABLE projetoa3.produtos (
     ON UPDATE NO ACTION);
 ```
 
-5. Editar o arquivo `config.py` para conectar ao banco de dados:
+4. Editar o arquivo `config.py` para conectar ao banco de dados:
 
 ```
 SQLALCHEMY_DATABASE_URI = 'mysql://usuario:senha@host:porta/nome_do_banco'
 ```
 
-6. Rodar a aplicação pelo arquivo `app.py`:
+5. Rodar a aplicação pelo arquivo `run.py`:
 
 ```
-python app.py
+python run.py
 ```
