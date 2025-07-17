@@ -1,7 +1,7 @@
 app/static/usuarios/
 app/static/produtos/
 
-.sqlite
+*.sqlite
 
 
 # Bytecode do Python
