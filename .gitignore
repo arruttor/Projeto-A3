@@ -1,0 +1,33 @@
+app/static/usuarios/
+app/static/produtos/
+
+.sqlite
+
+
+# Bytecode do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+app/static/anuncios/
+
+# Ambientes virtuais
+venv/
+.env/
+.env.bak
+.venv/
+ENV/
+env/
+
+# Cache do pip
+pip-wheel-metadata/
+*.egg-info/
+dist/
+build/
+
+# Uploads e arquivos gerados
+static/uploads/
+static/anuncios/
+uploads/
+media/
+

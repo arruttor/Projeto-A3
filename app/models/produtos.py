@@ -3,7 +3,7 @@ from app import db
 class Produto(db.Model):
     __tablename__ = 'produtos'
 
-    id_produto = db.Column(db.Integer, primary_key=True, nullable=False, unique=True, auto_increment=True)
+    id_produto = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(45), nullable=False)
     descricao = db.Column(db.String(255), nullable=False)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id', name='fkusuario'), nullable=False) 
